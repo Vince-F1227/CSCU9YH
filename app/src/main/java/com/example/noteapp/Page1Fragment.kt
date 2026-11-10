@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
 class Page1Fragment : Fragment() {
@@ -20,11 +22,21 @@ class Page1Fragment : Fragment() {
 
         val view = inflater.inflate(R.layout.page1_fragment, container, false)
         val but = view.findViewById<Button>(R.id.vbutton)
+        val but2 = view.findViewById<Button>(R.id.vbutton2)
+        val date = view.findViewById<TextView>(R.id.date)
         val value = view.findViewById<EditText>(R.id.editValue)
 
         but.setOnClickListener {
             viewModel.value.setValue(value.getText().toString())
         }
+
+        but2.setOnClickListener {
+            value.text.clear()
+        }
+
+        viewModel.date.observe(viewLifecycleOwner, Observer { SDate ->
+            date.text = SDate
+        })
 
         return view
     }
