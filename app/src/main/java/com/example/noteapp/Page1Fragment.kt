@@ -30,13 +30,22 @@ class Page1Fragment : Fragment() {
             val note = value.text.toString()
 
             if (note.isNotBlank()) {
-                viewModel.saveNote(note)
+                viewModel.addNote(note)
 
                 try {
-                    val fileOutput = requireContext().openFileOutput("savedNotes.txt",android.content.Context.MODE_PRIVATE)
+                    val notes = viewModel.notes.value ?: emptyList()
+                    val jsonArray = org.json.JSONArray()
 
-                    fileOutput.write(note.toByteArray())
+                    notes.forEach { savedNote ->
+                        jsonArray.put(savedNote)
+                    }
+
+                    val fileOutput = requireContext().openFileOutput("savedNotes.txt", android.content.Context.MODE_PRIVATE)
+
+                    fileOutput.write(jsonArray.toString().toByteArray())
                     fileOutput.close()
+
+                    value.text.clear()
 
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -50,10 +59,6 @@ class Page1Fragment : Fragment() {
 
         viewModel.date.observe(viewLifecycleOwner, Observer { SDate ->
             date.text = SDate
-        })
-
-        viewModel.value.observe(viewLifecycleOwner, Observer { savedNote ->
-            value.setText(savedNote)
         })
 
         return view

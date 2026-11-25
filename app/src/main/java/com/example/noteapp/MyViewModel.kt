@@ -4,24 +4,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MyViewModel : ViewModel() {
-    private val _value = MutableLiveData<String>()
+
+    private val _notes = MutableLiveData<List<String>>(emptyList())
     private val _date = MutableLiveData<String>()
 
-    val value: MutableLiveData<String>
-        get() = _value
+    val notes: MutableLiveData<List<String>>
+        get() = _notes
 
     val date: MutableLiveData<String>
         get() = _date
 
-    init {
-        _value.value = "default"
+    fun addNote(note: String) {
+        val currentNotes = _notes.value ?: emptyList()
+        _notes.value = currentNotes + note
+    }
+
+    fun loadNotes(savedNotes: List<String>) {
+        _notes.value = savedNotes
     }
 
     fun saveDate(selectedDate: String) {
         _date.value = selectedDate
-    }
-
-    fun saveNote(note: String) {
-        _value.value = note
     }
 }

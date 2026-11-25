@@ -1,33 +1,38 @@
+
 package com.example.noteapp
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import org.json.JSONArray
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val viewModel = ViewModelProvider(this)[MyViewModel::class.java]
 
         try {
-            val note = openFileInput("savedNotes.txt")
-                .bufferedReader()
-                .use { it.readText() }
+            val fileInput = openFileInput("savedNotes.txt")
+            val jsonText = fileInput.bufferedReader().use { it.readText() }
 
-            viewModel.saveNote(note)
+            val jsonArray = JSONArray(jsonText)
+            val notes = mutableListOf<String>()
+
+            for (i in 0 until jsonArray.length()) {
+                notes.add(jsonArray.getString(i))
+            }
+
+            viewModel.loadNotes(notes)
 
         } catch (e: Exception) {
-            viewModel.saveNote("")
+            viewModel.loadNotes(emptyList())
         }
 
         try {
@@ -51,12 +56,12 @@ class MainActivity : AppCompatActivity() {
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
 
         val viewPager = findViewById<ViewPager2>(R.id.pager)
-        val adapter = PageAdapter(this,3)
-        viewPager.setAdapter(adapter)
+        val adapter = PageAdapter(this, 3)
+
+        viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = "Page " + (position + 1)
         }.attach()
-
     }
 }
