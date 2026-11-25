@@ -26,18 +26,33 @@ class Page1Fragment : Fragment() {
         val date = view.findViewById<TextView>(R.id.date)
         val value = view.findViewById<EditText>(R.id.editValue)
 
-        but.setOnClickListener {
-            val note = value.text.toString()
 
-            if (note.isNotBlank()) {
-                viewModel.addNote(note)
+        but.setOnClickListener {
+            val noteText = value.text.toString()
+
+            if (noteText.isNotBlank()) {
+
+                // Get today's date automatically
+                val dateSaved = java.text.SimpleDateFormat(
+                    "dd/MM/yy",
+                    java.util.Locale.getDefault()
+                ).format(java.util.Date())
+
+                // Create a new note
+                val newNote = Note(noteText, dateSaved)
+
+                // Add it to the ViewModel
+                viewModel.addNote(newNote)
 
                 try {
                     val notes = viewModel.notes.value ?: emptyList()
                     val jsonArray = org.json.JSONArray()
 
-                    notes.forEach { savedNote ->
-                        jsonArray.put(savedNote)
+                    notes.forEach { note ->
+                        val jsonObject = org.json.JSONObject()
+                        jsonObject.put("text", note.text)
+                        jsonObject.put("date", note.date)
+                        jsonArray.put(jsonObject)
                     }
 
                     val fileOutput = requireContext().openFileOutput("savedNotes.txt", android.content.Context.MODE_PRIVATE)
@@ -52,6 +67,7 @@ class Page1Fragment : Fragment() {
                 }
             }
         }
+
 
         but2.setOnClickListener {
             value.text.clear()

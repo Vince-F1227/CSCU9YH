@@ -18,20 +18,35 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProvider(this)[MyViewModel::class.java]
 
+
         try {
             val fileInput = openFileInput("savedNotes.txt")
             val jsonText = fileInput.bufferedReader().use { it.readText() }
 
-            val jsonArray = JSONArray(jsonText)
-            val notes = mutableListOf<String>()
+            val jsonArray = org.json.JSONArray(jsonText)
+            val notes = mutableListOf<Note>()
 
             for (i in 0 until jsonArray.length()) {
-                notes.add(jsonArray.getString(i))
+                val item = jsonArray.get(i)
+
+                if (item is org.json.JSONObject) {
+                    notes.add(
+                        Note(
+                            item.getString("text"),
+                            item.getString("date")
+                        )
+                    )
+                } else {
+                    notes.add(
+                        Note(
+                            item.toString(),
+                            "Date unavailable"
+                        )
+                    )
+                }
             }
-
             viewModel.loadNotes(notes)
-
-        } catch (e: Exception) {
+        } catch (e: java.io.FileNotFoundException) {
             viewModel.loadNotes(emptyList())
         }
 
