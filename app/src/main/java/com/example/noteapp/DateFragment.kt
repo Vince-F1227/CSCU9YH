@@ -42,6 +42,15 @@ class DateFragment : Fragment() {
             ).format(Date(date))
 
             viewModel.saveDate(FDate)
+            try {
+                val fileOutput = requireContext().openFileOutput("savedDates.txt", android.content.Context.MODE_PRIVATE)
+
+                fileOutput.write(FDate.toByteArray())
+                fileOutput.close()
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         return v;

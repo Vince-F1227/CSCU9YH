@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -13,8 +14,33 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val viewModel = ViewModelProvider(this)[MyViewModel::class.java]
+
+        try {
+            val note = openFileInput("savedNotes.txt")
+                .bufferedReader()
+                .use { it.readText() }
+
+            viewModel.saveNote(note)
+
+        } catch (e: Exception) {
+            viewModel.saveNote("")
+        }
+
+        try {
+            val date = openFileInput("savedDates.txt")
+                .bufferedReader()
+                .use { it.readText() }
+
+            viewModel.saveDate(date)
+
+        } catch (e: Exception) {
+            viewModel.saveDate("")
+        }
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 

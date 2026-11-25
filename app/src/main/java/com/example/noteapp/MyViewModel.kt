@@ -20,4 +20,8 @@ class MyViewModel : ViewModel() {
     fun saveDate(selectedDate: String) {
         _date.value = selectedDate
     }
+
+    fun saveNote(note: String) {
+        _value.value = note
+    }
 }

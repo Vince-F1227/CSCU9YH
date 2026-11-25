@@ -27,7 +27,21 @@ class Page1Fragment : Fragment() {
         val value = view.findViewById<EditText>(R.id.editValue)
 
         but.setOnClickListener {
-            viewModel.value.setValue(value.getText().toString())
+            val note = value.text.toString()
+
+            if (note.isNotBlank()) {
+                viewModel.saveNote(note)
+
+                try {
+                    val fileOutput = requireContext().openFileOutput("savedNotes.txt",android.content.Context.MODE_PRIVATE)
+
+                    fileOutput.write(note.toByteArray())
+                    fileOutput.close()
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
 
         but2.setOnClickListener {
@@ -36,6 +50,10 @@ class Page1Fragment : Fragment() {
 
         viewModel.date.observe(viewLifecycleOwner, Observer { SDate ->
             date.text = SDate
+        })
+
+        viewModel.value.observe(viewLifecycleOwner, Observer { savedNote ->
+            value.setText(savedNote)
         })
 
         return view
