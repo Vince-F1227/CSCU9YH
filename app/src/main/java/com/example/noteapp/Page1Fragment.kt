@@ -32,16 +32,9 @@ class Page1Fragment : Fragment() {
 
             if (noteText.isNotBlank()) {
 
-                // Get today's date automatically
-                val dateSaved = java.text.SimpleDateFormat(
-                    "dd/MM/yy",
-                    java.util.Locale.getDefault()
-                ).format(java.util.Date())
+                val dateSaved = viewModel.date.value ?: ""
 
-                // Create a new note
                 val newNote = Note(noteText, dateSaved)
-
-                // Add it to the ViewModel
                 viewModel.addNote(newNote)
 
                 try {
@@ -61,7 +54,6 @@ class Page1Fragment : Fragment() {
                     fileOutput.close()
 
                     value.text.clear()
-
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
