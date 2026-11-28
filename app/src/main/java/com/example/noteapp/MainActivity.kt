@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProvider(this)[MyViewModel::class.java]
 
-
         try {
             val fileInput = openFileInput("savedNotes.txt")
             val jsonText = fileInput.bufferedReader().use { it.readText() }
@@ -46,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             viewModel.loadNotes(notes)
+
         } catch (e: java.io.FileNotFoundException) {
             viewModel.loadNotes(emptyList())
         }

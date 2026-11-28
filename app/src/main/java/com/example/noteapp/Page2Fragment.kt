@@ -52,9 +52,7 @@ class Page2Fragment : Fragment() {
                     val card = CardView(requireContext())
 
                     card.radius = 20f
-                    card.setCardBackgroundColor(
-                        android.graphics.Color.parseColor("#FDC5C8")
-                    )
+                    card.setCardBackgroundColor(android.graphics.Color.parseColor("#FDC5C8"))
                     card.cardElevation = 6f
 
                     val noteLayout = LinearLayout(requireContext())
@@ -64,16 +62,12 @@ class Page2Fragment : Fragment() {
                     val noteText = TextView(requireContext())
                     noteText.text = note.text
                     noteText.textSize = 18f
-                    noteText.setTextColor(
-                        android.graphics.Color.BLACK
-                    )
+                    noteText.setTextColor(android.graphics.Color.BLACK)
 
                     val dateText = TextView(requireContext())
                     dateText.text = "Date saved: ${note.date}"
                     dateText.textSize = 12f
-                    dateText.setTextColor(
-                        android.graphics.Color.DKGRAY
-                    )
+                    dateText.setTextColor(android.graphics.Color.DKGRAY)
 
                     noteLayout.addView(noteText)
                     noteLayout.addView(dateText)
@@ -82,8 +76,7 @@ class Page2Fragment : Fragment() {
 
                     val params = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
+                        LinearLayout.LayoutParams.WRAP_CONTENT)
 
                     params.setMargins(0, 0, 0, 20)
 
